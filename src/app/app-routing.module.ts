@@ -4,7 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: 'todos',
-    loadChildren: () => import('./todos/todos.module').then(m => m.TodosModule)
+    loadChildren: () =>
+      import('./feature/todos/todos.module').then(m => m.TodosModule)
   }
 ];
 
