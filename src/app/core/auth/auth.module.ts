@@ -6,8 +6,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { AuthRoutingModule } from './auth-routing.module';
 
 import { pages } from './pages';
+import { effects } from './store/effects';
 import * as fromAuth from './store/reducers/auth.reducer';
-import { AuthEffects } from './store/effects/auth.effects';
 
 @NgModule({
   declarations: [...pages],
@@ -15,7 +15,7 @@ import { AuthEffects } from './store/effects/auth.effects';
     CommonModule,
     AuthRoutingModule,
     StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.reducer),
-    EffectsModule.forFeature([AuthEffects])
+    EffectsModule.forFeature([...effects])
   ]
 })
 export class AuthModule {}
