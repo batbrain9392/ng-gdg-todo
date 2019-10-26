@@ -6,16 +6,16 @@ import { EffectsModule } from '@ngrx/effects';
 import { TodosRoutingModule } from './todos-routing.module';
 
 import { pages } from './pages';
+import { effects } from './store/effects';
 import * as fromTodo from './store/reducers/todo.reducer';
-import { TodoEffects } from './store/effects/todo.effects';
 
 @NgModule({
   declarations: [...pages],
   imports: [
     CommonModule,
     TodosRoutingModule,
-    StoreModule.forFeature(fromTodo.todosFeatureKey, fromTodo.reducer),
-    EffectsModule.forFeature([TodoEffects])
+    StoreModule.forFeature(fromTodo.todoFeatureKey, fromTodo.reducer),
+    EffectsModule.forFeature([...effects])
   ]
 })
 export class TodosModule {}

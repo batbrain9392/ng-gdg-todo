@@ -1,23 +1,47 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, concatMap } from 'rxjs/operators';
-import { EMPTY, of } from 'rxjs';
+import { of } from 'rxjs';
+import { TodoService } from '../services/todo.service';
 import * as fromActions from '../actions/todo.actions';
 
 @Injectable()
 export class TodoEffects {
-  // loadTodos$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(fromActions.loadTodos),
-  //     concatMap(() =>
-  //       /** An EMPTY observable only emits completion. Replace with your own observable API request */
-  //       EMPTY.pipe(
-  //         map(data => fromActions.loadTodosSuccess({ data })),
-  //         catchError(error => of(fromActions.loadTodosFailure({ error })))
-  //       )
-  //     )
-  //   )
-  // );
+  loadTodos$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromActions.loadTodos),
+      concatMap(() =>
+        this.todoService.loadTodos().pipe(
+          map(todos => fromActions.loadTodosSuccess({ todos })),
+          catchError(err => of(fromActions.loadTodosError({ err })))
+        )
+      )
+    )
+  );
 
-  constructor(private actions$: Actions) {}
+  upsertTodo$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromActions.upsertTodo),
+      concatMap(({ todo }) =>
+        this.todoService.upsertTodo(todo).pipe(
+          map(() => fromActions.upsertTodoSuccess({ todo })),
+          catchError(err => of(fromActions.upsertTodoError({ err })))
+        )
+      )
+    )
+  );
+
+  deleteTodo$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromActions.deleteTodo),
+      concatMap(({ todoId }) =>
+        this.todoService.deleteTodo(todoId).pipe(
+          map(() => fromActions.deleteTodoSuccess({ todoId })),
+          catchError(err => of(fromActions.deleteTodoError({ err })))
+        )
+      )
+    )
+  );
+
+  constructor(private actions$: Actions, private todoService: TodoService) {}
 }
