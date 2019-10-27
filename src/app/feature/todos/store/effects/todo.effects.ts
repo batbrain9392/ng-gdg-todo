@@ -43,5 +43,17 @@ export class TodoEffects {
     )
   );
 
+  clearTodos$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(fromActions.clearTodos),
+      concatMap(() =>
+        this.todoService.clearTodos().pipe(
+          map(() => fromActions.clearTodosSuccess()),
+          catchError(err => of(fromActions.clearTodosError({ err })))
+        )
+      )
+    )
+  );
+
   constructor(private actions$: Actions, private todoService: TodoService) {}
 }

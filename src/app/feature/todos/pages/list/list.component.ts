@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { AddEditComponent } from './components/add-edit/add-edit.component';
 import { Todo } from '../../store/models/todo.model';
 import * as fromStore from '../../store/reducers/todo.reducer';
 import * as fromSelectors from '../../store/selectors/todo.selectors';
@@ -15,10 +17,31 @@ import * as fromActions from '../../store/actions/todo.actions';
 export class ListComponent implements OnInit {
   todos$: Observable<Todo[]>;
 
-  constructor(private store: Store<fromStore.State>) {}
+  constructor(
+    private store: Store<fromStore.State>,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.store.dispatch(fromActions.loadTodos());
     this.todos$ = this.store.select(fromSelectors.getAllTodos);
+  }
+
+  onAdd() {
+    this.dialog.open(AddEditComponent);
+  }
+
+  onEdit(todo: Todo) {
+    this.dialog.open(AddEditComponent, {
+      data: todo
+    });
+  }
+
+  onDelete(todoId: string) {
+    this.store.dispatch(fromActions.deleteTodo({ todoId }));
+  }
+
+  onClear() {
+    this.store.dispatch(fromActions.clearTodos());
   }
 }
