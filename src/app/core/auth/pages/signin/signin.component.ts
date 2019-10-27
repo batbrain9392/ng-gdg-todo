@@ -4,6 +4,7 @@ import * as fromStore from '../../store/reducers/auth.reducer';
 import * as fromActions from '../../store/actions/auth.actions';
 
 @Component({
+  selector: 'app-signin',
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

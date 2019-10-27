@@ -1,0 +1,18 @@
+<h1>form</h1>
+<form [formGroup]="todoForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="standard">
+    <mat-label>name</mat-label>
+    <input matInput formControlName="name" />
+    <mat-error *ngIf="name.invalid">
+      name is required
+    </mat-error>
+  </mat-form-field>
+  <button
+    type="submit"
+    mat-raised-button
+    color="accent"
+    [disabled]="todoForm.invalid"
+  >
+    submit
+  </button>
+</form>

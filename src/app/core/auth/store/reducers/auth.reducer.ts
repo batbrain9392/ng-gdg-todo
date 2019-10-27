@@ -1,12 +1,12 @@
 import { Action, createReducer, on } from '@ngrx/store';
+import { User } from '../models/auth.model';
 import * as fromActions from '../actions/auth.actions';
-import * as fromModels from '../models/auth.model';
 
 export const authFeatureKey = 'auth';
 
 export interface State {
   isLoggedIn: boolean;
-  user: fromModels.User | null;
+  user: User | null;
 }
 
 export const initialState: State = {
