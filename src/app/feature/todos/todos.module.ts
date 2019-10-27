@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 
-import { SharedModule } from 'src/app/shared/shared.module';
+import { SharedModule } from '../../shared/shared.module';
 import { TodosRoutingModule } from './todos-routing.module';
 
 import { TodosComponent } from './todos.component';
@@ -15,7 +14,6 @@ import * as fromTodo from './store/reducers/todo.reducer';
   declarations: [TodosComponent, ...pages],
   entryComponents: [...entryComponents],
   imports: [
-    CommonModule,
     SharedModule,
     TodosRoutingModule,
     StoreModule.forFeature(fromTodo.todoFeatureKey, fromTodo.reducer),
