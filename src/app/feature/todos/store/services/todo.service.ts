@@ -19,13 +19,18 @@ export class TodoService {
   upsertTodo(todo: Todo) {
     return timer(this.delay).pipe(
       map(() => {
-        const index = this.todos.findIndex(({ id }) => id === todo.id);
-        if (index === -1) {
+        if (!todo.id) {
+          todo = { id: Date.now().toString(), ...todo };
           this.todos = [...this.todos, todo];
-          return 'inserted';
+          return todo;
         } else {
-          this.todos[index] = todo;
-          return 'updated';
+          const index = this.todos.findIndex(({ id }) => id === todo.id);
+          if (index > -1) {
+            this.todos[index] = todo;
+            return todo;
+          } else {
+            throw 'todo does not exist';
+          }
         }
       })
     );
@@ -33,17 +38,14 @@ export class TodoService {
 
   deleteTodo(todoId: string) {
     return timer(this.delay).pipe(
-      switchMap(() =>
-        iif(
-          () => this.todos.some(obj => obj.id === todoId),
-          of('deleted').pipe(
-            tap(
-              () => (this.todos = this.todos.filter(({ id }) => id !== todoId))
-            )
-          ),
-          throwError('todo does not exist')
-        )
-      )
+      map(() => {
+        const index = this.todos.findIndex(({ id }) => id !== todoId);
+        if (index > -1) {
+          this.todos = this.todos.splice(index);
+        } else {
+          throw 'todo does not exist';
+        }
+      })
     );
   }
 }

@@ -7,6 +7,7 @@ import * as fromSelectors from '../../store/selectors/todo.selectors';
 import * as fromActions from '../../store/actions/todo.actions';
 
 @Component({
+  selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -19,11 +20,5 @@ export class ListComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(fromActions.loadTodos());
     this.todos$ = this.store.select(fromSelectors.getAllTodos);
-  }
-
-  onSubmit() {
-    this.store.dispatch(
-      fromActions.upsertTodo({ todo: { id: '1', name: 'lecture' } })
-    );
   }
 }

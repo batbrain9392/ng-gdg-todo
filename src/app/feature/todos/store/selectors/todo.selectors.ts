@@ -9,3 +9,8 @@ export const getAllTodos = createSelector(
   getTodoState,
   fromTodo.selectAll
 );
+
+export const getTotalTodos = createSelector(
+  getTodoState,
+  fromTodo.selectTotal
+);

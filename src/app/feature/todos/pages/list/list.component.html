@@ -1,2 +1,4 @@
-<button (click)="onSubmit()">add todo</button>
-<p>{{ todos$ | async | json }}</p>
+<app-add-edit></app-add-edit>
+<section>
+  {{ todos$ | async | json }}
+</section>

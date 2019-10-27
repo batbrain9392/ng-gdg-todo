@@ -24,7 +24,7 @@ export class TodoEffects {
       ofType(fromActions.upsertTodo),
       concatMap(({ todo }) =>
         this.todoService.upsertTodo(todo).pipe(
-          map(() => fromActions.upsertTodoSuccess({ todo })),
+          map(todoObj => fromActions.upsertTodoSuccess({ todo: todoObj })),
           catchError(err => of(fromActions.upsertTodoError({ err })))
         )
       )
