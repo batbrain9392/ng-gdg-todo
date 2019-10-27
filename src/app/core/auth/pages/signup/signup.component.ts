@@ -4,6 +4,7 @@ import * as fromStore from '../../store/reducers/auth.reducer';
 import * as fromActions from '../../store/actions/auth.actions';
 
 @Component({
+  selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

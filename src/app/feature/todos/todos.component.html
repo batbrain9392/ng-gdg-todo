@@ -1,0 +1,15 @@
+<mat-toolbar color="primary" class="mat-elevation-z6">
+  <span>todos</span>
+  <span class="spacer"></span>
+  <mat-icon
+    [matBadge]="totalTodos | async"
+    matBadgeSize="small"
+    matBadgeColor="warn"
+    matTooltip="number of todos"
+  >
+    assignment
+  </mat-icon>
+</mat-toolbar>
+<main>
+  <router-outlet></router-outlet>
+</main>

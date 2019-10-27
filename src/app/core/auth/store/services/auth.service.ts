@@ -16,7 +16,7 @@ export class AuthService {
     return timer(this.delay).pipe(
       switchMap(() =>
         iif(
-          () => this.users.every(obj => obj.username !== user.username),
+          () => this.users.every(({ username }) => username !== user.username),
           of('user signed up').pipe(
             tap(() => (this.users = [...this.users, user]))
           ),
@@ -30,7 +30,7 @@ export class AuthService {
     return timer(this.delay).pipe(
       switchMap(() =>
         iif(
-          () => this.users.some(obj => obj.username === user.username),
+          () => this.users.some(({ username }) => username === user.username),
           of(user),
           throwError('user does not exist')
         )

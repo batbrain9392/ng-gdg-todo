@@ -5,20 +5,18 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 
-import { SharedModule } from './shared/shared.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './core/auth/auth.module';
 import { AppRoutingModule } from './app-routing.module';
 
-import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
-import { reducers } from './store';
+import { environment } from '../environments/environment';
+import { reducers } from './core/store';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    SharedModule,
     StoreModule.forRoot(reducers, {
       runtimeChecks: {
         strictStateImmutability: true,

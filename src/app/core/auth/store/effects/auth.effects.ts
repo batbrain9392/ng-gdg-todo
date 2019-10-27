@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { map, switchMap, catchError } from 'rxjs/operators';
+import { map, concatMap, catchError } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import * as fromActions from '../actions/auth.actions';
 
@@ -10,7 +10,7 @@ export class AuthEffects {
   signup$ = createEffect(() =>
     this.actions$.pipe(
       ofType(fromActions.signup),
-      switchMap(({ user }) =>
+      concatMap(({ user }) =>
         this.authService.signup(user).pipe(
           map(() => fromActions.signupSuccess()),
           catchError(err => of(fromActions.signupError({ err })))
@@ -22,9 +22,11 @@ export class AuthEffects {
   signin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(fromActions.signin),
-      switchMap(({ user }) =>
+      concatMap(({ user }) =>
         this.authService.signin(user).pipe(
-          map(userObj => fromActions.signinSuccess({ user: userObj })),
+          map(userReceived =>
+            fromActions.signinSuccess({ user: userReceived })
+          ),
           catchError(err => of(fromActions.signinError({ err })))
         )
       )

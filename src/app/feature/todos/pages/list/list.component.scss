@@ -1,0 +1,16 @@
+h1 {
+  display: flex;
+  align-items: center;
+}
+
+[mat-fab] {
+  position: fixed;
+  bottom: 16px;
+  right: 50%;
+  transform: translateX(50%);
+  z-index: 6;
+}
+
+mat-list-item:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
