@@ -24,7 +24,7 @@ export class ListComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(fromActions.loadTodos());
-    this.todos$ = this.store.select(fromSelectors.getAllTodos);
+    this.todos$ = this.store.select(fromSelectors.selectAllTodos);
   }
 
   onAdd() {

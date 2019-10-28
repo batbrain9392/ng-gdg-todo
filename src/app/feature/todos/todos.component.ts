@@ -16,6 +16,6 @@ export class TodosComponent implements OnInit {
   constructor(private store: Store<fromStore.State>) {}
 
   ngOnInit() {
-    this.totalTodos = this.store.select(fromSelectors.getTotalTodos);
+    this.totalTodos = this.store.select(fromSelectors.selectTotalTodos);
   }
 }

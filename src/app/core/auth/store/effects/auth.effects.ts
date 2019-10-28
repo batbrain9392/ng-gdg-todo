@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { of } from 'rxjs';
 import { map, exhaustMap, catchError, tap } from 'rxjs/operators';
@@ -49,7 +49,11 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(fromActions.signinSuccess),
-        tap(() => this.router.navigate(['/todos']))
+        tap(() =>
+          this.router.navigateByUrl(
+            this.route.snapshot.queryParams.returnUrl || '/todos'
+          )
+        )
       ),
     { dispatch: false }
   );
@@ -58,6 +62,7 @@ export class AuthEffects {
     private actions$: Actions,
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private snackBar: MatSnackBar
   ) {}
 }
