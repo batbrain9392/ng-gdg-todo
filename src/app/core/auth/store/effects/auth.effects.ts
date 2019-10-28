@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { map, concatMap, catchError } from 'rxjs/operators';
+import { map, exhaustMap, catchError, tap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import * as fromActions from '../actions/auth.actions';
 
@@ -10,19 +12,29 @@ export class AuthEffects {
   signup$ = createEffect(() =>
     this.actions$.pipe(
       ofType(fromActions.signup),
-      concatMap(({ user }) =>
+      exhaustMap(({ user }) =>
         this.authService.signup(user).pipe(
           map(() => fromActions.signupSuccess()),
+          tap(() => this.snackBar.open('signup successful')),
           catchError(err => of(fromActions.signupError({ err })))
         )
       )
     )
   );
 
+  signupRedirect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(fromActions.signupSuccess),
+        exhaustMap(() => this.router.navigate(['/signin']))
+      ),
+    { dispatch: false }
+  );
+
   signin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(fromActions.signin),
-      concatMap(({ user }) =>
+      exhaustMap(({ user }) =>
         this.authService.signin(user).pipe(
           map(userReceived =>
             fromActions.signinSuccess({ user: userReceived })
@@ -33,5 +45,19 @@ export class AuthEffects {
     )
   );
 
-  constructor(private actions$: Actions, private authService: AuthService) {}
+  signinRedirect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(fromActions.signinSuccess),
+        exhaustMap(() => this.router.navigate(['/todos']))
+      ),
+    { dispatch: false }
+  );
+
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private router: Router,
+    private snackBar: MatSnackBar
+  ) {}
 }
