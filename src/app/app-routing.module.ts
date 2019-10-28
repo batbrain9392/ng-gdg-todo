@@ -7,6 +7,7 @@ const routes: Routes = [
     path: 'todos',
     loadChildren: () =>
       import('./feature/todos/todos.module').then(m => m.TodosModule),
+    canLoad: [AuthGuard],
     canActivate: [AuthGuard]
   }
 ];
