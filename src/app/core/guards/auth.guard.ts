@@ -12,8 +12,8 @@ import {
 import { Observable } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import * as fromStore from '../auth/store/reducers/auth.reducer';
-import * as fromSelectors from '../auth/store/selectors/auth.selectors';
+import * as fromAuth from '../auth/store/reducers/auth.reducer';
+import * as authSelectors from '../auth/store/selectors/auth.selectors';
 
 @Injectable({
   providedIn: 'root'
@@ -39,10 +39,10 @@ export class AuthGuard implements CanLoad, CanActivate {
     return this.isAuthenticated(state.url);
   }
 
-  constructor(private router: Router, private store: Store<fromStore.State>) {}
+  constructor(private router: Router, private store: Store<fromAuth.State>) {}
 
   private isAuthenticated(currentUrl: string) {
-    return this.store.select(fromSelectors.selectIsLoggedIn).pipe(
+    return this.store.select(authSelectors.selectIsLoggedIn).pipe(
       take(1),
       tap(isLoggedIn => {
         if (!isLoggedIn) {

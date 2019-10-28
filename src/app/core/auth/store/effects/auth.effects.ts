@@ -5,18 +5,18 @@ import { of } from 'rxjs';
 import { map, exhaustMap, catchError, tap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../services/auth.service';
-import * as fromActions from '../actions/auth.actions';
+import * as authActions from '../actions/auth.actions';
 
 @Injectable()
 export class AuthEffects {
   signup$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fromActions.signup),
+      ofType(authActions.signup),
       exhaustMap(({ user }) =>
         this.authService.signup(user).pipe(
-          map(() => fromActions.signupSuccess()),
+          map(() => authActions.signupSuccess()),
           tap(() => this.snackBar.open('signup successful')),
-          catchError(err => of(fromActions.signupError({ err })))
+          catchError(err => of(authActions.signupError({ err })))
         )
       )
     )
@@ -25,7 +25,7 @@ export class AuthEffects {
   signupRedirect$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(fromActions.signupSuccess),
+        ofType(authActions.signupSuccess),
         tap(() => this.router.navigate(['/signin']))
       ),
     { dispatch: false }
@@ -33,13 +33,13 @@ export class AuthEffects {
 
   signin$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fromActions.signin),
+      ofType(authActions.signin),
       exhaustMap(({ user }) =>
         this.authService.signin(user).pipe(
           map(userReceived =>
-            fromActions.signinSuccess({ user: userReceived })
+            authActions.signinSuccess({ user: userReceived })
           ),
-          catchError(err => of(fromActions.signinError({ err })))
+          catchError(err => of(authActions.signinError({ err })))
         )
       )
     )
@@ -48,7 +48,7 @@ export class AuthEffects {
   signinRedirect$ = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(fromActions.signinSuccess),
+        ofType(authActions.signinSuccess),
         tap(() =>
           this.router.navigateByUrl(
             this.route.snapshot.queryParams.returnUrl || '/todos'

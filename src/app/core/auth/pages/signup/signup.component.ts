@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import * as fromStore from '../../store/reducers/auth.reducer';
-import * as fromActions from '../../store/actions/auth.actions';
+import * as fromAuth from '../../store/reducers/auth.reducer';
+import * as authActions from '../../store/actions/auth.actions';
 
 @Component({
   selector: 'app-signup',
@@ -13,7 +13,7 @@ import * as fromActions from '../../store/actions/auth.actions';
 export class SignupComponent implements OnInit {
   signupForm: FormGroup;
 
-  constructor(private store: Store<fromStore.State>, private fb: FormBuilder) {}
+  constructor(private store: Store<fromAuth.State>, private fb: FormBuilder) {}
 
   ngOnInit() {
     this.signupForm = this.fb.group({
@@ -32,7 +32,7 @@ export class SignupComponent implements OnInit {
 
   onSubmit() {
     this.store.dispatch(
-      fromActions.signup({
+      authActions.signup({
         user: this.signupForm.value
       })
     );

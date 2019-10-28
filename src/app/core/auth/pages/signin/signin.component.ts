@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import * as fromStore from '../../store/reducers/auth.reducer';
-import * as fromActions from '../../store/actions/auth.actions';
+import * as fromAuth from '../../store/reducers/auth.reducer';
+import * as authActions from '../../store/actions/auth.actions';
 
 @Component({
   selector: 'app-signin',
@@ -13,7 +13,7 @@ import * as fromActions from '../../store/actions/auth.actions';
 export class SigninComponent implements OnInit {
   signinForm: FormGroup;
 
-  constructor(private store: Store<fromStore.State>, private fb: FormBuilder) {}
+  constructor(private store: Store<fromAuth.State>, private fb: FormBuilder) {}
 
   ngOnInit() {
     this.signinForm = this.fb.group({
@@ -32,7 +32,7 @@ export class SigninComponent implements OnInit {
 
   onSubmit() {
     this.store.dispatch(
-      fromActions.signin({
+      authActions.signin({
         user: this.signinForm.value
       })
     );

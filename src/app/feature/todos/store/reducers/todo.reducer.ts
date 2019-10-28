@@ -1,7 +1,7 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Todo } from '../models/todo.model';
-import * as fromActions from '../actions/todo.actions';
+import * as todoActions from '../actions/todo.actions';
 
 export const todoFeatureKey = 'todos';
 
@@ -13,16 +13,16 @@ export const initialState: State = adapter.getInitialState({});
 
 const todoReducer = createReducer(
   initialState,
-  on(fromActions.loadTodosSuccess, (state, action) =>
+  on(todoActions.loadTodosSuccess, (state, action) =>
     adapter.addAll(action.todos, state)
   ),
-  on(fromActions.upsertTodoSuccess, (state, action) =>
+  on(todoActions.upsertTodoSuccess, (state, action) =>
     adapter.upsertOne(action.todo, state)
   ),
-  on(fromActions.deleteTodoSuccess, (state, action) =>
+  on(todoActions.deleteTodoSuccess, (state, action) =>
     adapter.removeOne(action.todoId, state)
   ),
-  on(fromActions.clearTodosSuccess, state => adapter.removeAll(state))
+  on(todoActions.clearTodosSuccess, state => adapter.removeAll(state))
 );
 
 export function reducer(state: State | undefined, action: Action) {

@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import * as fromStore from './store/reducers/todo.reducer';
-import * as fromSelectors from './store/selectors/todo.selectors';
+import * as fromTodo from './store/reducers/todo.reducer';
+import * as todoSelectors from './store/selectors/todo.selectors';
 
 @Component({
   selector: 'app-todos',
@@ -13,9 +13,9 @@ import * as fromSelectors from './store/selectors/todo.selectors';
 export class TodosComponent implements OnInit {
   totalTodos: Observable<number>;
 
-  constructor(private store: Store<fromStore.State>) {}
+  constructor(private store: Store<fromTodo.State>) {}
 
   ngOnInit() {
-    this.totalTodos = this.store.select(fromSelectors.selectTotalTodos);
+    this.totalTodos = this.store.select(todoSelectors.selectTotalTodos);
   }
 }
