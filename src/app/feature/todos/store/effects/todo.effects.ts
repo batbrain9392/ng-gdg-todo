@@ -4,6 +4,7 @@ import { catchError, map, concatMap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TodoService } from '../services/todo.service';
 import * as todoActions from '../actions/todo.actions';
+import * as appActions from '../../../../core/store/actions/app.actions';
 
 @Injectable()
 export class TodoEffects {
@@ -52,6 +53,18 @@ export class TodoEffects {
           catchError(err => of(todoActions.clearTodosError({ err })))
         )
       )
+    )
+  );
+
+  todoError$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        todoActions.loadTodosError,
+        todoActions.upsertTodoError,
+        todoActions.deleteTodoError,
+        todoActions.clearTodosError
+      ),
+      map(({ err }) => appActions.loadEndError({ err }))
     )
   );
 

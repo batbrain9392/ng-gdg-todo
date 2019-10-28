@@ -6,6 +6,7 @@ import { map, exhaustMap, catchError, tap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../services/auth.service';
 import * as authActions from '../actions/auth.actions';
+import * as appActions from '../../../store/actions/app.actions';
 
 @Injectable()
 export class AuthEffects {
@@ -21,7 +22,6 @@ export class AuthEffects {
       )
     )
   );
-
   signupRedirect$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -30,7 +30,7 @@ export class AuthEffects {
       ),
     { dispatch: false }
   );
-
+  
   signin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(authActions.signin),
@@ -44,7 +44,6 @@ export class AuthEffects {
       )
     )
   );
-
   signinRedirect$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -56,6 +55,13 @@ export class AuthEffects {
         )
       ),
     { dispatch: false }
+  );
+  
+  authError$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(authActions.signupError, authActions.signinError),
+      map(({ err }) => appActions.loadEndError({ err }))
+    )
   );
 
   constructor(
