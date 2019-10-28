@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { AddEditComponent } from './components/add-edit/add-edit.component';
 import { Todo } from '../../store/models/todo.model';
 import * as fromStore from '../../store/reducers/todo.reducer';

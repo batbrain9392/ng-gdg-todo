@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 import * as fromStore from './store/reducers/todo.reducer';
 import * as fromSelectors from './store/selectors/todo.selectors';
 
