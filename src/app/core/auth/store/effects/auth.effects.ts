@@ -26,7 +26,7 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(fromActions.signupSuccess),
-        exhaustMap(() => this.router.navigate(['/signin']))
+        tap(() => this.router.navigate(['/signin']))
       ),
     { dispatch: false }
   );
@@ -49,7 +49,7 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(fromActions.signinSuccess),
-        exhaustMap(() => this.router.navigate(['/todos']))
+        tap(() => this.router.navigate(['/todos']))
       ),
     { dispatch: false }
   );
