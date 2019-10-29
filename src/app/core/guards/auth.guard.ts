@@ -1,16 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
-  CanLoad,
-  Route,
-  UrlSegment,
-  CanActivate,
+  CanActivateChild,
   ActivatedRouteSnapshot,
   RouterStateSnapshot,
-  UrlTree,
-  Router
+  UrlTree
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { take, map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import * as fromAuth from '../auth/store/reducers/auth.reducer';
 import * as authSelectors from '../auth/store/selectors/auth.selectors';
@@ -18,17 +14,8 @@ import * as authSelectors from '../auth/store/selectors/auth.selectors';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanLoad, CanActivate {
-  canLoad(
-    route: Route,
-    segments: UrlSegment[]
-  ): Observable<boolean> | Promise<boolean> | boolean {
-    return this.isAuthenticated(
-      `/${segments.map(({ path }) => path).join('/')}`
-    );
-  }
-
-  canActivate(
+export class AuthGuard implements CanActivateChild {
+  canActivateChild(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ):
@@ -36,21 +23,15 @@ export class AuthGuard implements CanLoad, CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    return this.isAuthenticated(state.url);
+    return this.isNotAuthenticated();
   }
 
-  constructor(private router: Router, private store: Store<fromAuth.State>) {}
+  constructor(private store: Store<fromAuth.State>) {}
 
-  private isAuthenticated(currentUrl: string) {
+  private isNotAuthenticated() {
     return this.store.select(authSelectors.selectIsLoggedIn).pipe(
       take(1),
-      tap(isLoggedIn => {
-        if (!isLoggedIn) {
-          this.router.navigate(['/signin'], {
-            queryParams: { returnUrl: currentUrl }
-          });
-        }
-      })
+      map(isLoggedIn => !isLoggedIn)
     );
   }
 }
