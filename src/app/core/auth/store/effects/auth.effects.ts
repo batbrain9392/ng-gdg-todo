@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { of } from 'rxjs';
 import { map, exhaustMap, catchError, tap, switchMap } from 'rxjs/operators';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../services/auth.service';
+import { Store } from '@ngrx/store';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as authActions from '../actions/auth.actions';
+import * as fromApp from '../../../store/index';
+import * as routeSelectors from '../../../store/route.selectors';
 
 @Injectable()
 export class AuthEffects {
@@ -47,11 +50,13 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(authActions.signinSuccess),
-        tap(() =>
-          this.router.navigateByUrl(
-            this.route.snapshot.queryParams.returnUrl || '/todos'
-          )
-        )
+        tap(() => this.router.navigate(['/todos']))
+        // switchMap(() =>
+        //   this.store.select(routeSelectors.selectReturnUrl).pipe(
+        //     tap(returnUrl => console.log({ returnUrl })),
+        //     tap(returnUrl => this.router.navigateByUrl(returnUrl || '/todos'))
+        //   )
+        // )
       ),
     { dispatch: false }
   );
@@ -94,9 +99,9 @@ export class AuthEffects {
 
   constructor(
     private actions$: Actions,
+    private store: Store<fromApp.State>,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute,
     private snackBar: MatSnackBar
   ) {}
 }
