@@ -27,11 +27,11 @@ export class SigninComponent implements OnInit {
   }
 
   get username() {
-    return this.signinForm.controls.username;
+    return this.signinForm && this.signinForm.controls.username;
   }
 
   get password() {
-    return this.signinForm.controls.password;
+    return this.signinForm && this.signinForm.controls.password;
   }
 
   onSubmit() {
