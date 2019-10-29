@@ -1,7 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import * as fromStore from '../../store/reducers/auth.reducer';
-import * as fromActions from '../../store/actions/auth.actions';
+import * as fromAuth from '../../store/reducers/auth.reducer';
+import * as authActions from '../../store/actions/auth.actions';
+import * as authSelectors from '../../store/selectors/auth.selectors';
 
 @Component({
   selector: 'app-signin',
@@ -10,14 +13,31 @@ import * as fromActions from '../../store/actions/auth.actions';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SigninComponent implements OnInit {
-  constructor(private store: Store<fromStore.State>) {}
+  signinForm: FormGroup;
+  isLoading: Observable<boolean>;
 
-  ngOnInit() {}
+  constructor(private store: Store<fromAuth.State>, private fb: FormBuilder) {}
+
+  ngOnInit() {
+    this.signinForm = this.fb.group({
+      username: [null, Validators.required],
+      password: [null, Validators.required]
+    });
+    this.isLoading = this.store.select(authSelectors.selectIsLoading);
+  }
+
+  get username() {
+    return this.signinForm.controls.username;
+  }
+
+  get password() {
+    return this.signinForm.controls.password;
+  }
 
   onSubmit() {
     this.store.dispatch(
-      fromActions.signin({
-        user: { username: 'user1', password: 'pass1' }
+      authActions.signin({
+        user: this.signinForm.value
       })
     );
   }

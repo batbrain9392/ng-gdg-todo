@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, concatMap } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material';
 import { of } from 'rxjs';
+import { catchError, map, concatMap, switchMap } from 'rxjs/operators';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TodoService } from '../services/todo.service';
-import * as fromActions from '../actions/todo.actions';
+import * as todoActions from '../actions/todo.actions';
 
 @Injectable()
 export class TodoEffects {
   loadTodos$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fromActions.loadTodos),
+      ofType(todoActions.loadTodos),
       concatMap(() =>
         this.todoService.loadTodos().pipe(
-          map(todos => fromActions.loadTodosSuccess({ todos })),
-          catchError(err => of(fromActions.loadTodosError({ err })))
+          map(todos => todoActions.loadTodosSuccess({ todos })),
+          catchError(err => of(todoActions.loadTodosError({ err })))
         )
       )
     )
@@ -21,11 +22,11 @@ export class TodoEffects {
 
   upsertTodo$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fromActions.upsertTodo),
+      ofType(todoActions.upsertTodo),
       concatMap(({ todo }) =>
         this.todoService.upsertTodo(todo).pipe(
-          map(todoObj => fromActions.upsertTodoSuccess({ todo: todoObj })),
-          catchError(err => of(fromActions.upsertTodoError({ err })))
+          map(todoObj => todoActions.upsertTodoSuccess({ todo: todoObj })),
+          catchError(err => of(todoActions.upsertTodoError({ err })))
         )
       )
     )
@@ -33,11 +34,11 @@ export class TodoEffects {
 
   deleteTodo$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fromActions.deleteTodo),
+      ofType(todoActions.deleteTodo),
       concatMap(({ todoId }) =>
         this.todoService.deleteTodo(todoId).pipe(
-          map(() => fromActions.deleteTodoSuccess({ todoId })),
-          catchError(err => of(fromActions.deleteTodoError({ err })))
+          map(() => todoActions.deleteTodoSuccess({ todoId })),
+          catchError(err => of(todoActions.deleteTodoError({ err })))
         )
       )
     )
@@ -45,15 +46,36 @@ export class TodoEffects {
 
   clearTodos$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fromActions.clearTodos),
+      ofType(todoActions.clearTodos),
       concatMap(() =>
         this.todoService.clearTodos().pipe(
-          map(() => fromActions.clearTodosSuccess()),
-          catchError(err => of(fromActions.clearTodosError({ err })))
+          map(() => todoActions.clearTodosSuccess()),
+          catchError(err => of(todoActions.clearTodosError({ err })))
         )
       )
     )
   );
 
-  constructor(private actions$: Actions, private todoService: TodoService) {}
+  todoErrors$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        todoActions.loadTodosError,
+        todoActions.upsertTodoError,
+        todoActions.deleteTodoError,
+        todoActions.clearTodosError
+      ),
+      switchMap(({ err }) =>
+        this.snackBar
+          .open(err, 'close', { duration: 5000, panelClass: 'snackbar-error' })
+          .afterDismissed()
+          .pipe(map(() => todoActions.todosErrorClear()))
+      )
+    )
+  );
+
+  constructor(
+    private actions$: Actions,
+    private todoService: TodoService,
+    private snackBar: MatSnackBar
+  ) {}
 }

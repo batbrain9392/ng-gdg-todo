@@ -1,37 +1,102 @@
 import { Injectable } from '@angular/core';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { Router, ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 import { of } from 'rxjs';
-import { map, concatMap, catchError } from 'rxjs/operators';
+import { map, exhaustMap, catchError, tap, switchMap } from 'rxjs/operators';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../services/auth.service';
-import * as fromActions from '../actions/auth.actions';
+import * as authActions from '../actions/auth.actions';
 
 @Injectable()
 export class AuthEffects {
   signup$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fromActions.signup),
-      concatMap(({ user }) =>
+      ofType(authActions.signup),
+      exhaustMap(({ user }) =>
         this.authService.signup(user).pipe(
-          map(() => fromActions.signupSuccess()),
-          catchError(err => of(fromActions.signupError({ err })))
+          map(() => authActions.signupSuccess()),
+          tap(() => this.snackBar.open('signup successful')),
+          catchError(err => of(authActions.signupError({ err })))
         )
       )
     )
+  );
+  signupRedirect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(authActions.signupSuccess),
+        tap(() => this.router.navigate(['/signin']))
+      ),
+    { dispatch: false }
   );
 
   signin$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(fromActions.signin),
-      concatMap(({ user }) =>
+      ofType(authActions.signin),
+      exhaustMap(({ user }) =>
         this.authService.signin(user).pipe(
           map(userReceived =>
-            fromActions.signinSuccess({ user: userReceived })
+            authActions.signinSuccess({ user: userReceived })
           ),
-          catchError(err => of(fromActions.signinError({ err })))
+          catchError(err => of(authActions.signinError({ err })))
         )
       )
     )
   );
+  signinRedirect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(authActions.signinSuccess),
+        tap(() =>
+          this.router.navigateByUrl(
+            this.route.snapshot.queryParams.returnUrl || '/todos'
+          )
+        )
+      ),
+    { dispatch: false }
+  );
 
-  constructor(private actions$: Actions, private authService: AuthService) {}
+  signout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(authActions.signout),
+      exhaustMap(() =>
+        this.authService.signout().pipe(
+          map(() => authActions.signoutSuccess()),
+          catchError(err => of(authActions.signoutError({ err })))
+        )
+      )
+    )
+  );
+  signoutRedirect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(authActions.signoutSuccess),
+        tap(() => this.router.navigateByUrl('/signin'))
+      ),
+    { dispatch: false }
+  );
+
+  authErrors$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        authActions.signupError,
+        authActions.signinError,
+        authActions.signoutError
+      ),
+      switchMap(({ err }) =>
+        this.snackBar
+          .open(err, 'close', { duration: 5000, panelClass: 'snackbar-error' })
+          .afterDismissed()
+          .pipe(map(() => authActions.authErrorClear()))
+      )
+    )
+  );
+
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private snackBar: MatSnackBar
+  ) {}
 }

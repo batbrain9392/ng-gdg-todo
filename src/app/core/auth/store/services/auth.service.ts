@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { timer, iif, of, throwError } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap, map } from 'rxjs/operators';
 import { User } from '../models/auth.model';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { User } from '../models/auth.model';
 })
 export class AuthService {
   private delay = 2000;
-  private users: User[] = [];
+  private users: User[] = [{ username: 'asd', password: 'asd' }];
 
   constructor() {}
 
@@ -30,11 +30,19 @@ export class AuthService {
     return timer(this.delay).pipe(
       switchMap(() =>
         iif(
-          () => this.users.some(({ username }) => username === user.username),
+          () =>
+            this.users.some(
+              ({ username, password }) =>
+                username === user.username && password === user.password
+            ),
           of(user),
           throwError('user does not exist')
         )
       )
     );
+  }
+
+  signout() {
+    return timer(this.delay).pipe(map(() => 'user signed out'));
   }
 }

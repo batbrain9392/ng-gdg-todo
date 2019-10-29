@@ -23,3 +23,12 @@ export const signupError = createAction(
   '[Signup API] Signup Error',
   props<{ err: string }>()
 );
+
+export const signout = createAction('[Feature Page] Signout');
+export const signoutSuccess = createAction('[Signout API] Signout Success');
+export const signoutError = createAction(
+  '[Signout API] Signout Error',
+  props<{ err: string }>()
+);
+
+export const authErrorClear = createAction('[Auth Page] Auth Error Clear');

@@ -1,28 +1,84 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Todo } from '../models/todo.model';
-import * as fromActions from '../actions/todo.actions';
+import * as todoActions from '../actions/todo.actions';
 
 export const todoFeatureKey = 'todos';
 
-export interface State extends EntityState<Todo> {}
+export interface State extends EntityState<Todo> {
+  loading: boolean;
+  err: string;
+}
 
-export const adapter: EntityAdapter<Todo> = createEntityAdapter<Todo>();
+const adapter: EntityAdapter<Todo> = createEntityAdapter<Todo>();
 
-export const initialState: State = adapter.getInitialState({});
+const initialState: State = adapter.getInitialState({
+  loading: false,
+  err: null
+});
 
 const todoReducer = createReducer(
   initialState,
-  on(fromActions.loadTodosSuccess, (state, action) =>
-    adapter.addAll(action.todos, state)
-  ),
-  on(fromActions.upsertTodoSuccess, (state, action) =>
-    adapter.upsertOne(action.todo, state)
-  ),
-  on(fromActions.deleteTodoSuccess, (state, action) =>
-    adapter.removeOne(action.todoId, state)
-  ),
-  on(fromActions.clearTodosSuccess, state => adapter.removeAll(state))
+  on(todoActions.loadTodos, (state, action) => ({
+    ...state,
+    loading: true
+  })),
+  on(todoActions.loadTodosSuccess, (state, action) => ({
+    ...state,
+    ...adapter.addAll(action.todos, state),
+    loading: false
+  })),
+  on(todoActions.loadTodosError, (state, action) => ({
+    ...state,
+    loading: false,
+    err: action.err
+  })),
+  on(todoActions.upsertTodo, (state, action) => ({
+    ...state,
+    loading: true
+  })),
+  on(todoActions.upsertTodoSuccess, (state, action) => ({
+    ...state,
+    ...adapter.upsertOne(action.todo, state),
+    loading: false
+  })),
+  on(todoActions.upsertTodoError, (state, action) => ({
+    ...state,
+    loading: false,
+    err: action.err
+  })),
+  on(todoActions.deleteTodo, (state, action) => ({
+    ...state,
+    loading: true
+  })),
+  on(todoActions.deleteTodoSuccess, (state, action) => ({
+    ...state,
+    ...adapter.removeOne(action.todoId, state),
+    loading: false
+  })),
+  on(todoActions.deleteTodoError, (state, action) => ({
+    ...state,
+    loading: false,
+    err: action.err
+  })),
+  on(todoActions.clearTodos, (state, action) => ({
+    ...state,
+    loading: true
+  })),
+  on(todoActions.clearTodosSuccess, (state, action) => ({
+    ...state,
+    ...adapter.removeAll(state),
+    loading: false
+  })),
+  on(todoActions.clearTodosError, (state, action) => ({
+    ...state,
+    loading: false,
+    err: action.err
+  })),
+  on(todoActions.todosErrorClear, (state, action) => ({
+    ...state,
+    err: null
+  }))
 );
 
 export function reducer(state: State | undefined, action: Action) {

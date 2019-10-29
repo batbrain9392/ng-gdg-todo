@@ -9,7 +9,12 @@ import {
   MatInputModule,
   MatListModule,
   MatDialogModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatSnackBarModule,
+  MAT_SNACK_BAR_DEFAULT_OPTIONS,
+  MatProgressSpinnerModule,
+  MatProgressBarModule,
+  MatMenuModule
 } from '@angular/material';
 
 @NgModule({
@@ -23,7 +28,14 @@ import {
     MatInputModule,
     MatListModule,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
+    MatMenuModule
+  ],
+  providers: [
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: 2500 } }
   ]
 })
 export class MaterialModule {}

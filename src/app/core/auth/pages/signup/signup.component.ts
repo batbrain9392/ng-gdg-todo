@@ -1,7 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/internal/Observable';
 import { Store } from '@ngrx/store';
-import * as fromStore from '../../store/reducers/auth.reducer';
-import * as fromActions from '../../store/actions/auth.actions';
+import * as fromAuth from '../../store/reducers/auth.reducer';
+import * as authActions from '../../store/actions/auth.actions';
+import * as authSelectors from '../../store/selectors/auth.selectors';
 
 @Component({
   selector: 'app-signup',
@@ -10,14 +13,31 @@ import * as fromActions from '../../store/actions/auth.actions';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignupComponent implements OnInit {
-  constructor(private store: Store<fromStore.State>) {}
+  signupForm: FormGroup;
+  isLoading: Observable<boolean>;
 
-  ngOnInit() {}
+  constructor(private store: Store<fromAuth.State>, private fb: FormBuilder) {}
+
+  ngOnInit() {
+    this.signupForm = this.fb.group({
+      username: [null, Validators.required],
+      password: [null, Validators.required]
+    });
+    this.isLoading = this.store.select(authSelectors.selectIsLoading);
+  }
+
+  get username() {
+    return this.signupForm.controls.username;
+  }
+
+  get password() {
+    return this.signupForm.controls.password;
+  }
 
   onSubmit() {
     this.store.dispatch(
-      fromActions.signup({
-        user: { username: 'user1', password: 'pass1' }
+      authActions.signup({
+        user: this.signupForm.value
       })
     );
   }

@@ -2,16 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { TodosComponent } from './todos.component';
-import { ListComponent, DetailsComponent } from './pages';
+import { ListComponent } from './pages';
 
 const routes: Routes = [
   {
     path: '',
     component: TodosComponent,
-    children: [
-      { path: ':todoId', component: DetailsComponent },
-      { path: '', component: ListComponent }
-    ]
+    children: [{ path: '', component: ListComponent }]
   }
 ];
 

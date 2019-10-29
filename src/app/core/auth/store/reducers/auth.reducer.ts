@@ -1,30 +1,65 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { User } from '../models/auth.model';
-import * as fromActions from '../actions/auth.actions';
+import * as authActions from '../actions/auth.actions';
 
 export const authFeatureKey = 'auth';
 
 export interface State {
-  isLoggedIn: boolean;
   user: User | null;
+  loading: boolean;
+  err: string;
 }
 
-export const initialState: State = {
-  isLoggedIn: false,
-  user: null
+const initialState: State = {
+  user: null,
+  loading: false,
+  err: null
 };
 
 const authReducer = createReducer(
   initialState,
-  on(fromActions.signinSuccess, (state, action) => ({
+  on(authActions.signin, (state, action) => ({
     ...state,
-    isLoggedIn: true,
-    user: action.user
+    loading: true
   })),
-  on(fromActions.signinError, state => ({
+  on(authActions.signinSuccess, (state, action) => ({
     ...state,
-    isLoggedIn: false,
-    user: null
+    user: action.user,
+    loading: false
+  })),
+  on(authActions.signinError, (state, action) => ({
+    ...state,
+    loading: false,
+    err: action.err
+  })),
+  on(authActions.signup, (state, action) => ({
+    ...state,
+    loading: true
+  })),
+  on(authActions.signupSuccess, (state, action) => ({
+    ...state,
+    loading: false
+  })),
+  on(authActions.signupError, (state, action) => ({
+    ...state,
+    loading: false,
+    err: action.err
+  })),
+  on(authActions.signout, (state, action) => ({
+    ...state,
+    loading: true
+  })),
+  on(authActions.signoutSuccess, (state, action) => ({
+    ...initialState
+  })),
+  on(authActions.signoutError, (state, action) => ({
+    ...state,
+    loading: false,
+    err: action.err
+  })),
+  on(authActions.authErrorClear, (state, action) => ({
+    ...state,
+    err: null
   }))
 );
 

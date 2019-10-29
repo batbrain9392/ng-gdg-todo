@@ -1,12 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 import { AddEditComponent } from './components/add-edit/add-edit.component';
 import { Todo } from '../../store/models/todo.model';
-import * as fromStore from '../../store/reducers/todo.reducer';
-import * as fromSelectors from '../../store/selectors/todo.selectors';
-import * as fromActions from '../../store/actions/todo.actions';
+import * as fromTodo from '../../store/reducers/todo.reducer';
+import * as todoSelectors from '../../store/selectors/todo.selectors';
+import * as todoActions from '../../store/actions/todo.actions';
 
 @Component({
   selector: 'app-list',
@@ -17,14 +17,11 @@ import * as fromActions from '../../store/actions/todo.actions';
 export class ListComponent implements OnInit {
   todos$: Observable<Todo[]>;
 
-  constructor(
-    private store: Store<fromStore.State>,
-    public dialog: MatDialog
-  ) {}
+  constructor(private store: Store<fromTodo.State>, public dialog: MatDialog) {}
 
   ngOnInit() {
-    this.store.dispatch(fromActions.loadTodos());
-    this.todos$ = this.store.select(fromSelectors.getAllTodos);
+    this.store.dispatch(todoActions.loadTodos());
+    this.todos$ = this.store.select(todoSelectors.selectAllTodos);
   }
 
   onAdd() {
@@ -38,10 +35,10 @@ export class ListComponent implements OnInit {
   }
 
   onDelete(todoId: string) {
-    this.store.dispatch(fromActions.deleteTodo({ todoId }));
+    this.store.dispatch(todoActions.deleteTodo({ todoId }));
   }
 
   onClear() {
-    this.store.dispatch(fromActions.clearTodos());
+    this.store.dispatch(todoActions.clearTodos());
   }
 }
