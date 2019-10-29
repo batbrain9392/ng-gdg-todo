@@ -2,7 +2,14 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { of } from 'rxjs';
-import { map, exhaustMap, catchError, tap, switchMap } from 'rxjs/operators';
+import {
+  map,
+  exhaustMap,
+  catchError,
+  tap,
+  switchMap,
+  take
+} from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -50,13 +57,12 @@ export class AuthEffects {
     () =>
       this.actions$.pipe(
         ofType(authActions.signinSuccess),
-        tap(() => this.router.navigate(['/todos']))
-        // switchMap(() =>
-        //   this.store.select(routeSelectors.selectReturnUrl).pipe(
-        //     tap(returnUrl => console.log({ returnUrl })),
-        //     tap(returnUrl => this.router.navigateByUrl(returnUrl || '/todos'))
-        //   )
-        // )
+        switchMap(() =>
+          this.store.select(routeSelectors.selectReturnUrl).pipe(
+            take(1),
+            tap(returnUrl => this.router.navigateByUrl(returnUrl || '/todos'))
+          )
+        )
       ),
     { dispatch: false }
   );
