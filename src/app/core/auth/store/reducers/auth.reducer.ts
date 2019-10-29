@@ -10,7 +10,7 @@ export interface State {
   err: string;
 }
 
-export const initialState: State = {
+const initialState: State = {
   user: null,
   loading: false,
   err: null
@@ -23,6 +23,7 @@ const authReducer = createReducer(
     loading: true
   })),
   on(authActions.signinSuccess, (state, action) => ({
+    ...state,
     user: action.user,
     loading: false
   })),
@@ -36,6 +37,7 @@ const authReducer = createReducer(
     loading: true
   })),
   on(authActions.signupSuccess, (state, action) => ({
+    ...state,
     user: null,
     loading: false
   })),
