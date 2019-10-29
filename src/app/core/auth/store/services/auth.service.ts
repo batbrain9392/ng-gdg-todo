@@ -30,7 +30,11 @@ export class AuthService {
     return timer(this.delay).pipe(
       switchMap(() =>
         iif(
-          () => this.users.some(({ username }) => username === user.username),
+          () =>
+            this.users.some(
+              ({ username, password }) =>
+                username === user.username && password === user.password
+            ),
           of(user),
           throwError('user does not exist')
         )

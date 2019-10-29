@@ -5,28 +5,26 @@ import * as fromActions from '../actions/auth.actions';
 export const authFeatureKey = 'auth';
 
 export interface State {
+  user: User | null;
   loading: boolean;
   err: string;
-  user: User | null;
 }
 
 export const initialState: State = {
+  user: null,
   loading: false,
-  err: null,
-  user: null
+  err: null
 };
 
 const authReducer = createReducer(
   initialState,
   on(fromActions.signin, (state, action) => ({
     ...state,
-    loading: true,
-    err: null
+    loading: true
   })),
   on(fromActions.signinSuccess, (state, action) => ({
     user: action.user,
-    loading: false,
-    err: null
+    loading: false
   })),
   on(fromActions.signinError, (state, action) => ({
     ...state,
@@ -35,18 +33,20 @@ const authReducer = createReducer(
   })),
   on(fromActions.signup, (state, action) => ({
     ...state,
-    loading: true,
-    err: null
+    loading: true
   })),
   on(fromActions.signupSuccess, (state, action) => ({
     user: null,
-    loading: false,
-    err: null
+    loading: false
   })),
   on(fromActions.signupError, (state, action) => ({
     ...state,
     loading: false,
     err: action.err
+  })),
+  on(fromActions.authErrorClear, (state, action) => ({
+    ...state,
+    err: null
   }))
 );
 

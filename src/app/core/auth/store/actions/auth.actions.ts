@@ -23,3 +23,5 @@ export const signupError = createAction(
   '[Signup API] Signup Error',
   props<{ err: string }>()
 );
+
+export const authErrorClear = createAction('[Auth Pages] Auth Error Clear');

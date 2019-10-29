@@ -48,3 +48,18 @@ body {
     margin-left: 16px;
   }
 }
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.snackbar-error {
+  background: var(--warn);
+  font-weight: 500;
+  color: white;
+
+  .mat-simple-snackbar-action {
+    color: white;
+  }
+}

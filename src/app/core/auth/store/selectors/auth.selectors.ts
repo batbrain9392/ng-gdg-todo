@@ -5,7 +5,7 @@ const selectAuthState = createFeatureSelector<fromAuth.State>(
   fromAuth.authFeatureKey
 );
 
-export const selectLoading = createSelector(
+export const selectIsLoading = createSelector(
   selectAuthState,
   state => state.loading
 );

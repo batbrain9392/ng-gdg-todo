@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { of } from 'rxjs';
-import { map, exhaustMap, catchError, tap } from 'rxjs/operators';
+import { map, exhaustMap, catchError, tap, switchMap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../services/auth.service';
 import * as authActions from '../actions/auth.actions';
@@ -54,6 +54,18 @@ export class AuthEffects {
         )
       ),
     { dispatch: false }
+  );
+
+  authErrors$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(authActions.signupError, authActions.signinError),
+      switchMap(({ err }) =>
+        this.snackBar
+          .open(err, 'close', { duration: 5000, panelClass: 'snackbar-error' })
+          .afterDismissed()
+          .pipe(map(() => authActions.authErrorClear()))
+      )
+    )
   );
 
   constructor(
