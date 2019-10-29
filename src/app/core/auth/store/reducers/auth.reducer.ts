@@ -1,6 +1,6 @@
 import { Action, createReducer, on } from '@ngrx/store';
 import { User } from '../models/auth.model';
-import * as fromActions from '../actions/auth.actions';
+import * as authActions from '../actions/auth.actions';
 
 export const authFeatureKey = 'auth';
 
@@ -18,33 +18,33 @@ export const initialState: State = {
 
 const authReducer = createReducer(
   initialState,
-  on(fromActions.signin, (state, action) => ({
+  on(authActions.signin, (state, action) => ({
     ...state,
     loading: true
   })),
-  on(fromActions.signinSuccess, (state, action) => ({
+  on(authActions.signinSuccess, (state, action) => ({
     user: action.user,
     loading: false
   })),
-  on(fromActions.signinError, (state, action) => ({
+  on(authActions.signinError, (state, action) => ({
     ...state,
     loading: false,
     err: action.err
   })),
-  on(fromActions.signup, (state, action) => ({
+  on(authActions.signup, (state, action) => ({
     ...state,
     loading: true
   })),
-  on(fromActions.signupSuccess, (state, action) => ({
+  on(authActions.signupSuccess, (state, action) => ({
     user: null,
     loading: false
   })),
-  on(fromActions.signupError, (state, action) => ({
+  on(authActions.signupError, (state, action) => ({
     ...state,
     loading: false,
     err: action.err
   })),
-  on(fromActions.authErrorClear, (state, action) => ({
+  on(authActions.authErrorClear, (state, action) => ({
     ...state,
     err: null
   }))
