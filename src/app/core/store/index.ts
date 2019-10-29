@@ -1,10 +1,5 @@
 import { ActionReducerMap } from '@ngrx/store';
-import * as fromApp from './reducers/app.reducer';
 
-export interface State {
-  [fromApp.appFeatureKey]: fromApp.State;
-}
+export interface State {}
 
-export const reducers: ActionReducerMap<State> = {
-  [fromApp.appFeatureKey]: fromApp.reducer
-};
+export const reducers: ActionReducerMap<State> = {};
