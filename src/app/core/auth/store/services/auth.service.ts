@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { timer, iif, of, throwError } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap, map } from 'rxjs/operators';
 import { User } from '../models/auth.model';
 
 @Injectable({
@@ -40,5 +40,9 @@ export class AuthService {
         )
       )
     );
+  }
+
+  signout() {
+    return timer(this.delay).pipe(map(() => 'user signed out'));
   }
 }

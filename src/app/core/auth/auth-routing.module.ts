@@ -10,7 +10,7 @@ const routes: Routes = [
     children: [
       { path: 'signin', component: SigninComponent },
       { path: 'signup', component: SignupComponent },
-      { path: '', pathMatch: 'full', redirectTo: 'signup' }
+      { path: '', pathMatch: 'full', redirectTo: 'signin' }
     ],
     canActivateChild: [AuthGuard]
   }

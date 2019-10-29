@@ -56,9 +56,33 @@ export class AuthEffects {
     { dispatch: false }
   );
 
+  signout$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(authActions.signout),
+      exhaustMap(() =>
+        this.authService.signout().pipe(
+          map(() => authActions.signoutSuccess()),
+          catchError(err => of(authActions.signoutError({ err })))
+        )
+      )
+    )
+  );
+  signoutRedirect$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(authActions.signoutSuccess),
+        tap(() => this.router.navigateByUrl('/signin'))
+      ),
+    { dispatch: false }
+  );
+
   authErrors$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(authActions.signupError, authActions.signinError),
+      ofType(
+        authActions.signupError,
+        authActions.signinError,
+        authActions.signoutError
+      ),
       switchMap(({ err }) =>
         this.snackBar
           .open(err, 'close', { duration: 5000, panelClass: 'snackbar-error' })
