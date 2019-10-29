@@ -8,7 +8,7 @@ import { User } from '../models/auth.model';
 })
 export class AuthService {
   private delay = 2000;
-  private users: User[] = [];
+  private users: User[] = [{ username: 'asd', password: 'asd' }];
 
   constructor() {}
 
