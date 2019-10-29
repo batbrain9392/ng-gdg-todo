@@ -16,7 +16,7 @@ import * as fromTodo from './store/reducers/todo.reducer';
   imports: [
     SharedModule,
     TodosRoutingModule,
-    StoreModule.forFeature(fromTodo.todoFeatureKey, fromTodo.reducer),
+    StoreModule.forFeature(fromTodo.key, fromTodo.reducer),
     EffectsModule.forFeature([...effects])
   ]
 })

@@ -14,7 +14,7 @@ import * as fromAuth from './store/reducers/auth.reducer';
   imports: [
     SharedModule,
     AuthRoutingModule,
-    StoreModule.forFeature(fromAuth.authFeatureKey, fromAuth.reducer),
+    StoreModule.forFeature(fromAuth.key, fromAuth.reducer),
     EffectsModule.forFeature([...effects])
   ]
 })
