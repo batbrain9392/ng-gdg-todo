@@ -10,9 +10,9 @@ export interface State extends EntityState<Todo> {
   err: string;
 }
 
-export const adapter: EntityAdapter<Todo> = createEntityAdapter<Todo>();
+const adapter: EntityAdapter<Todo> = createEntityAdapter<Todo>();
 
-export const initialState: State = adapter.getInitialState({
+const initialState: State = adapter.getInitialState({
   loading: false,
   err: null
 });
@@ -21,13 +21,12 @@ const todoReducer = createReducer(
   initialState,
   on(todoActions.loadTodos, (state, action) => ({
     ...state,
-    loading: true,
-    err: null
+    loading: true
   })),
   on(todoActions.loadTodosSuccess, (state, action) => ({
+    ...state,
     ...adapter.addAll(action.todos, state),
-    loading: false,
-    err: null
+    loading: false
   })),
   on(todoActions.loadTodosError, (state, action) => ({
     ...state,
@@ -36,13 +35,12 @@ const todoReducer = createReducer(
   })),
   on(todoActions.upsertTodo, (state, action) => ({
     ...state,
-    loading: true,
-    err: null
+    loading: true
   })),
   on(todoActions.upsertTodoSuccess, (state, action) => ({
+    ...state,
     ...adapter.upsertOne(action.todo, state),
-    loading: false,
-    err: null
+    loading: false
   })),
   on(todoActions.upsertTodoError, (state, action) => ({
     ...state,
@@ -51,13 +49,12 @@ const todoReducer = createReducer(
   })),
   on(todoActions.deleteTodo, (state, action) => ({
     ...state,
-    loading: true,
-    err: null
+    loading: true
   })),
   on(todoActions.deleteTodoSuccess, (state, action) => ({
+    ...state,
     ...adapter.removeOne(action.todoId, state),
-    loading: false,
-    err: null
+    loading: false
   })),
   on(todoActions.deleteTodoError, (state, action) => ({
     ...state,
@@ -66,18 +63,21 @@ const todoReducer = createReducer(
   })),
   on(todoActions.clearTodos, (state, action) => ({
     ...state,
-    loading: true,
-    err: null
+    loading: true
   })),
   on(todoActions.clearTodosSuccess, (state, action) => ({
+    ...state,
     ...adapter.removeAll(state),
-    loading: false,
-    err: null
+    loading: false
   })),
   on(todoActions.clearTodosError, (state, action) => ({
     ...state,
     loading: false,
     err: action.err
+  })),
+  on(todoActions.todosErrorClear, (state, action) => ({
+    ...state,
+    err: null
   }))
 );
 

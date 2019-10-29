@@ -43,3 +43,5 @@ export const clearTodosError = createAction(
   '[Todo API] Clear Todos Error',
   props<{ err: string }>()
 );
+
+export const todosErrorClear = createAction('[Todo Page] Todo Error Clear');

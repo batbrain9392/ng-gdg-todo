@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import { of } from 'rxjs';
-import { catchError, map, concatMap } from 'rxjs/operators';
+import { catchError, map, concatMap, switchMap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TodoService } from '../services/todo.service';
 import * as todoActions from '../actions/todo.actions';
@@ -55,5 +56,26 @@ export class TodoEffects {
     )
   );
 
-  constructor(private actions$: Actions, private todoService: TodoService) {}
+  todoErrors$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(
+        todoActions.loadTodosError,
+        todoActions.upsertTodoError,
+        todoActions.deleteTodoError,
+        todoActions.clearTodosError
+      ),
+      switchMap(({ err }) =>
+        this.snackBar
+          .open(err, 'close', { duration: 5000, panelClass: 'snackbar-error' })
+          .afterDismissed()
+          .pipe(map(() => todoActions.todosErrorClear()))
+      )
+    )
+  );
+
+  constructor(
+    private actions$: Actions,
+    private todoService: TodoService,
+    private snackBar: MatSnackBar
+  ) {}
 }

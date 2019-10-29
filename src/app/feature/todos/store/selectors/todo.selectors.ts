@@ -5,7 +5,7 @@ const selectTodoState = createFeatureSelector<fromTodo.State>(
   fromTodo.todoFeatureKey
 );
 
-export const selectLoading = createSelector(
+export const selectIsLoading = createSelector(
   selectTodoState,
   state => state.loading
 );
