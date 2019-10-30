@@ -2,7 +2,7 @@ import { Action, createReducer, on } from '@ngrx/store';
 import { User } from '../models/auth.model';
 import * as authActions from '../actions/auth.actions';
 
-export const authFeatureKey = 'auth';
+export const key = 'auth';
 
 export interface State {
   user: User | null;

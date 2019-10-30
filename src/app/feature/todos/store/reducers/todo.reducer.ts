@@ -3,7 +3,7 @@ import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Todo } from '../models/todo.model';
 import * as todoActions from '../actions/todo.actions';
 
-export const todoFeatureKey = 'todos';
+export const key = 'todo';
 
 export interface State extends EntityState<Todo> {
   loading: boolean;

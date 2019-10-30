@@ -1,5 +1,13 @@
 import { ActionReducerMap } from '@ngrx/store';
+import { RouterReducerState, routerReducer } from '@ngrx/router-store';
+import { RouterStateUrl } from './route.serializer';
 
-export interface State {}
+export const routerKey = 'router';
 
-export const reducers: ActionReducerMap<State> = {};
+export interface State {
+  router: RouterReducerState<RouterStateUrl>;
+}
+
+export const reducers: ActionReducerMap<State> = {
+  router: routerReducer
+};

@@ -1,9 +1,7 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import * as fromTodo from '../reducers/todo.reducer';
 
-const selectTodoState = createFeatureSelector<fromTodo.State>(
-  fromTodo.todoFeatureKey
-);
+const selectTodoState = createFeatureSelector<fromTodo.State>(fromTodo.key);
 
 export const selectIsLoading = createSelector(
   selectTodoState,
