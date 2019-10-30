@@ -6,10 +6,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Store } from '@ngrx/store';
 import { Todo } from '../../../../store/models/todo.model';
-import * as fromTodo from '../../../../store/reducers/todo.reducer';
-import * as todoActions from '../../../../store/actions/todo.actions';
 
 @Component({
   selector: 'app-add-edit',
@@ -21,7 +18,6 @@ export class AddEditComponent implements OnInit {
   todoForm: FormGroup;
 
   constructor(
-    private store: Store<fromTodo.State>,
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<AddEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Todo
@@ -45,7 +41,7 @@ export class AddEditComponent implements OnInit {
       id: this.data ? this.data.id : Date.now().toString(),
       ...this.todoForm.value
     };
-    this.store.dispatch(todoActions.upsertTodo({ todo }));
+    // this.store.dispatch(todoActions.upsertTodo({ todo }));
     this.dialogRef.close();
   }
 }
