@@ -11,8 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
-import { reducers } from './core/store';
-import { CustomSerializer } from './core/store/route.serializer';
+import { reducers } from './store';
+import { CustomSerializer } from './store/route.serializer';
 
 @NgModule({
   declarations: [AppComponent],

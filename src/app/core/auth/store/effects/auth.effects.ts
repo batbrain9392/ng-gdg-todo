@@ -10,12 +10,12 @@ import {
   switchMap,
   take
 } from 'rxjs/operators';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services';
 import { Store } from '@ngrx/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import * as authActions from '../actions/auth.actions';
-import * as fromApp from '../../../store/index';
-import * as routeSelectors from '../../../store/route.selectors';
+import * as fromApp from '../../../../store/index';
+import * as routeSelectors from '../../../../store/route.selectors';
 
 @Injectable()
 export class AuthEffects {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { timer, iif, of, throwError } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { Todo } from '../models/todo.model';
+import { timer } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Todo } from '../store/models/todo.model';
 
 @Injectable({
   providedIn: 'root'

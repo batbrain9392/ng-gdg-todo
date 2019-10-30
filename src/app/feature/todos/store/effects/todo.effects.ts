@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material';
 import { of } from 'rxjs';
 import { catchError, map, concatMap, switchMap } from 'rxjs/operators';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { TodoService } from '../services/todo.service';
+import { TodoService } from '../../services';
 import * as todoActions from '../actions/todo.actions';
 
 @Injectable()
