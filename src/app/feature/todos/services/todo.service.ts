@@ -37,9 +37,9 @@ export class TodoService {
         const index = this.todos.findIndex(({ id }) => id === todoId);
         if (index > -1) {
           this.todos = this.todos.splice(index, 1);
-        } else {
-          throw 'todo does not exist';
+          return 'todo deleted';
         }
+        throw 'todo does not exist';
       })
     );
   }
