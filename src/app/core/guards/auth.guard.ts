@@ -7,6 +7,7 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { take, map } from 'rxjs/operators';
+import { AuthService } from '../auth/services';
 
 @Injectable({
   providedIn: 'root'
@@ -23,13 +24,12 @@ export class AuthGuard implements CanActivateChild {
     return this.isNotAuthenticated();
   }
 
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
   private isNotAuthenticated() {
-    return true;
-    // return this.store.select(authSelectors.selectIsLoggedIn).pipe(
-    //   take(1),
-    //   map(isLoggedIn => !isLoggedIn)
-    // );
+    return this.authService.isSignedin$.pipe(
+      take(1),
+      map(isLoggedIn => !isLoggedIn)
+    );
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/internal/Observable';
+import { Observable } from 'rxjs';
+import { AuthService } from '../../services';
 
 @Component({
   selector: 'app-signup',
@@ -10,16 +11,16 @@ import { Observable } from 'rxjs/internal/Observable';
 })
 export class SignupComponent implements OnInit {
   signupForm: FormGroup;
-  isLoading: Observable<boolean>;
+  isLoading$: Observable<boolean>;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private authService: AuthService, private fb: FormBuilder) {}
 
   ngOnInit() {
     this.signupForm = this.fb.group({
       username: [null, Validators.required],
       password: [null, Validators.required]
     });
-    // this.isLoading = this.store.select(authSelectors.selectIsLoading);
+    this.isLoading$ = this.authService.isLoading$;
   }
 
   get username() {
@@ -31,10 +32,6 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit() {
-    // this.store.dispatch(
-    //   authActions.signup({
-    //     user: this.signupForm.value
-    //   })
-    // );
+    this.authService.signup(this.signupForm.value).subscribe();
   }
 }

@@ -11,6 +11,7 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 import { take, tap } from 'rxjs/operators';
+import { AuthService } from '../auth/services';
 
 @Injectable({
   providedIn: 'root'
@@ -36,19 +37,18 @@ export class FeatureGuard implements CanLoad, CanActivate {
     return this.isAuthenticated(state.url);
   }
 
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   private isAuthenticated(currentUrl: string) {
-    return true;
-    // return this.store.select(authSelectors.selectIsLoggedIn).pipe(
-    //   take(1),
-    //   tap(isLoggedIn => {
-    //     if (!isLoggedIn) {
-    //       this.router.navigate(['/signin'], {
-    //         queryParams: { returnUrl: currentUrl }
-    //       });
-    //     }
-    //   })
-    // );
+    return this.authService.isSignedin$.pipe(
+      take(1),
+      tap(isLoggedIn => {
+        if (!isLoggedIn) {
+          this.router.navigate(['/signin'], {
+            queryParams: { returnUrl: currentUrl }
+          });
+        }
+      })
+    );
   }
 }
