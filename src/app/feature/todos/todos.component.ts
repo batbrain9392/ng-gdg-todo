@@ -1,6 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
+import { AuthService } from '../../core/auth/services';
+import { TodoService } from './services';
 
 @Component({
   selector: 'app-todos',
@@ -9,22 +11,25 @@ import { map, filter } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TodosComponent implements OnInit {
-  totalTodos: Observable<number>;
-  isLoading: Observable<boolean>;
-  username: Observable<string>;
+  totalTodos$: Observable<number>;
+  isLoading$: Observable<boolean>;
+  username$: Observable<string>;
 
-  constructor() {}
+  constructor(
+    private authService: AuthService,
+    private todoService: TodoService
+  ) {}
 
   ngOnInit() {
-    // this.totalTodos = this.store.select(todoSelectors.selectTotalTodos);
-    // this.isLoading = this.store.select(todoSelectors.selectIsLoading);
-    // this.username = this.store.select(authSelectors.selectUser).pipe(
-    //   filter(user => !!user),
-    //   map(user => user.username)
-    // );
+    this.username$ = this.authService.signedinUser$.pipe(
+      filter(user => !!user),
+      map(user => user.username)
+    );
+    this.isLoading$ = this.todoService.isLoading$;
+    this.totalTodos$ = this.todoService.totalTodos$;
   }
 
   onSignout() {
-    // this.store.dispatch(authActions.signout());
+    this.authService.signout().subscribe();
   }
 }

@@ -3,7 +3,7 @@
   <span class="spacer"></span>
   <button mat-icon-button matTooltip="no. of todos in list">
     <mat-icon
-      [matBadge]="totalTodos | async"
+      [matBadge]="totalTodos$ | async"
       matBadgeSize="small"
       matBadgeColor="warn"
       matBadgePosition="below"
@@ -23,7 +23,7 @@
   <mat-menu #settingsMenu="matMenu">
     <button mat-menu-item>
       <mat-icon>account_circle</mat-icon>
-      <span>{{ username | async }}</span>
+      <span>{{ username$ | async }}</span>
     </button>
     <button mat-menu-item (click)="onSignout()">
       <mat-icon>exit_to_app</mat-icon>
@@ -34,7 +34,7 @@
 <div class="progress-bar-container">
   <mat-progress-bar
     mode="indeterminate"
-    *ngIf="isLoading | async"
+    *ngIf="isLoading$ | async"
   ></mat-progress-bar>
 </div>
 <main>

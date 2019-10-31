@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { Todo } from '../../../../store/models/todo.model';
+import { Todo } from '../../../../models/todo.model';
 
 @Component({
   selector: 'app-add-edit',
@@ -41,7 +41,6 @@ export class AddEditComponent implements OnInit {
       id: this.data ? this.data.id : Date.now().toString(),
       ...this.todoForm.value
     };
-    // this.store.dispatch(todoActions.upsertTodo({ todo }));
-    this.dialogRef.close();
+    this.dialogRef.close(todo);
   }
 }

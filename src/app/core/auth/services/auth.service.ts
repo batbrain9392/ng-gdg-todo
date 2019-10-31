@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { timer, BehaviorSubject, of } from 'rxjs';
 import { map, tap, catchError, take } from 'rxjs/operators';
-import { User } from '../store/models/auth.model';
+import { User } from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +11,11 @@ import { User } from '../store/models/auth.model';
 export class AuthService {
   private delay = 2000;
   private users: User[] = [{ username: 'asd', password: 'asd' }];
+  private isLoading = new BehaviorSubject<boolean>(false);
+  isLoading$ = this.isLoading.asObservable();
   private signedinUser = new BehaviorSubject<User>(null);
   signedinUser$ = this.signedinUser.asObservable();
   isSignedin$ = this.signedinUser$.pipe(map(user => !!user));
-  private isLoading = new BehaviorSubject<boolean>(false);
-  isLoading$ = this.isLoading.asObservable();
 
   constructor(
     private router: Router,
@@ -39,13 +39,7 @@ export class AuthService {
       }),
       tap(() => this.snackBar.open('signup successful')),
       tap(() => this.router.navigate(['/signin'])),
-      catchError(err => {
-        this.snackBar.open(err, 'close', {
-          duration: 5000,
-          panelClass: 'snackbar-error'
-        });
-        return of(null);
-      }),
+      catchError(err => this.errorHandler(err)),
       tap(() => this.isLoading.next(false))
     );
   }
@@ -69,13 +63,7 @@ export class AuthService {
         const returnUrl = this.route.snapshot.queryParams.returnUrl;
         this.router.navigateByUrl(returnUrl || '/todos');
       }),
-      catchError(err => {
-        this.snackBar.open(err, 'close', {
-          duration: 5000,
-          panelClass: 'snackbar-error'
-        });
-        return of(null);
-      }),
+      catchError(err => this.errorHandler(err)),
       tap(() => this.isLoading.next(false))
     );
   }
@@ -87,14 +75,16 @@ export class AuthService {
       map(() => 'user signed out'),
       tap(() => this.signedinUser.next(null)),
       tap(() => this.router.navigate(['/signin'])),
-      catchError(err => {
-        this.snackBar.open(err, 'close', {
-          duration: 5000,
-          panelClass: 'snackbar-error'
-        });
-        return of(null);
-      }),
+      catchError(err => this.errorHandler(err)),
       tap(() => this.isLoading.next(false))
     );
+  }
+
+  private errorHandler(err: string) {
+    this.snackBar.open(err, 'close', {
+      duration: 5000,
+      panelClass: 'snackbar-error'
+    });
+    return of(null);
   }
 }
