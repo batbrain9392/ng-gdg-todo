@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 import { timer, BehaviorSubject, of } from 'rxjs';
-import { map, tap, catchError, take } from 'rxjs/operators';
+import { map, tap, catchError } from 'rxjs/operators';
 import { Todo } from '../models/todo.model';
 
 @Injectable({

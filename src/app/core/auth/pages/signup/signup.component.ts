@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { SubSink } from 'subsink';
 import { AuthService } from '../../services';
 
 @Component({
@@ -10,6 +11,7 @@ import { AuthService } from '../../services';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignupComponent implements OnInit {
+  private subs = new SubSink();
   signupForm: FormGroup;
   isLoading$: Observable<boolean>;
 
@@ -33,5 +35,9 @@ export class SignupComponent implements OnInit {
 
   onSubmit() {
     this.authService.signup(this.signupForm.value).subscribe();
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 }

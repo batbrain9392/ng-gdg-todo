@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 import { timer, BehaviorSubject, of } from 'rxjs';
-import { map, tap, catchError, take } from 'rxjs/operators';
+import { map, tap, catchError } from 'rxjs/operators';
 import { User } from '../models/auth.model';
 
 @Injectable({
@@ -26,7 +26,6 @@ export class AuthService {
   signup(user: User) {
     this.isLoading.next(true);
     return timer(this.delay).pipe(
-      take(1),
       map(() => {
         const userNotExists = this.users.every(
           ({ username }) => username !== user.username
@@ -47,7 +46,6 @@ export class AuthService {
   signin(user: User) {
     this.isLoading.next(true);
     return timer(this.delay).pipe(
-      take(1),
       map(() => {
         const userExists = this.users.some(
           ({ username, password }) =>
@@ -71,7 +69,6 @@ export class AuthService {
   signout() {
     this.isLoading.next(true);
     return timer(this.delay).pipe(
-      take(1),
       map(() => 'user signed out'),
       tap(() => this.signedinUser.next(null)),
       tap(() => this.router.navigate(['/signin'])),
