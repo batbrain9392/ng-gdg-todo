@@ -32,7 +32,7 @@ export class TodoService {
       this.todos = this.todos.splice(index, 1);
       return of(true);
     }
-    throwError('todo does not exist');
+    return throwError('todo does not exist');
   }
 
   clearTodos() {

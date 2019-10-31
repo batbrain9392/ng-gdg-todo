@@ -22,7 +22,7 @@ export class AuthService {
       this.users = [...this.users, user];
       return of('user signed up');
     }
-    throwError('user already exists');
+    return throwError('user already exists');
   }
 
   signin(user: User) {
@@ -34,7 +34,7 @@ export class AuthService {
       this.signedinUser.next(user);
       return of(user);
     }
-    throwError('user does not exist');
+    return throwError('user does not exist');
   }
 
   signout() {
