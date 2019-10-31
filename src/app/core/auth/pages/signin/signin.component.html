@@ -2,8 +2,6 @@
   <mat-card>
     <h1 class="flex">
       <span>signin</span>
-      <span class="spacer"></span>
-      <mat-spinner diameter="24" *ngIf="isLoading$ | async"></mat-spinner>
     </h1>
     <form [formGroup]="signinForm" (ngSubmit)="onSubmit()">
       <mat-form-field appearance="standard" class="full-width">

@@ -31,12 +31,6 @@
     </button>
   </mat-menu>
 </mat-toolbar>
-<div class="progress-bar-container">
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="isLoading$ | async"
-  ></mat-progress-bar>
-</div>
 <main>
   <router-outlet></router-outlet>
 </main>

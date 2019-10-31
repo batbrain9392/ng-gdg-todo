@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatSnackBar } from '@angular/material';
 import { mergeMap } from 'rxjs/operators';
 import { SubSink } from 'subsink';
 import { AddEditComponent } from './components/add-edit/add-edit.component';
@@ -15,7 +15,11 @@ export class ListComponent implements OnInit, OnDestroy {
   private subs = new SubSink();
   todos: Todo[] = [];
 
-  constructor(private todoService: TodoService, private dialog: MatDialog) {}
+  constructor(
+    private todoService: TodoService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit() {
     const sub = this.todoService.loadTodos().subscribe(todos => {
@@ -43,27 +47,31 @@ export class ListComponent implements OnInit, OnDestroy {
 
   onEdit(todo: Todo, index: number) {
     const sub = this.dialog
-      .open(AddEditComponent, {
-        data: todo
-      })
+      .open(AddEditComponent, { data: todo })
       .afterClosed()
       .pipe(mergeMap((todo: Todo) => this.todoService.upsertTodo(todo)))
       .subscribe((todoReceived: Todo) => {
         if (todoReceived) {
           this.todos[index] = todoReceived;
-          this.updateTotalTodos();
         }
       });
     this.subs.add(sub);
   }
 
   onDelete(todoId: string, index: number) {
-    const sub = this.todoService.deleteTodo(todoId).subscribe(isSuccess => {
-      if (isSuccess) {
-        this.todos = this.todos.splice(index, 1);
-        this.updateTotalTodos();
-      }
-    });
+    const sub = this.todoService.deleteTodo(todoId).subscribe(
+      isSuccess => {
+        if (isSuccess) {
+          this.todos = this.todos.splice(index, 1);
+          this.updateTotalTodos();
+        }
+      },
+      (err: string) =>
+        this.snackBar.open(err, 'close', {
+          duration: 5000,
+          panelClass: 'snackbar-error'
+        })
+    );
     this.subs.add(sub);
   }
 

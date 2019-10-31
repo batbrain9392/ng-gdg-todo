@@ -1,23 +1,25 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
+import { SubSink } from 'subsink';
 import { AuthService } from '../../core/auth/services';
 import { TodoService } from './services';
 
 @Component({
   selector: 'app-todos',
   templateUrl: './todos.component.html',
-  styleUrls: ['./todos.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./todos.component.scss']
 })
-export class TodosComponent implements OnInit {
+export class TodosComponent implements OnInit, OnDestroy {
+  private subs = new SubSink();
   totalTodos$: Observable<number>;
-  isLoading$: Observable<boolean>;
   username$: Observable<string>;
 
   constructor(
     private authService: AuthService,
-    private todoService: TodoService
+    private todoService: TodoService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -25,11 +27,17 @@ export class TodosComponent implements OnInit {
       filter(user => !!user),
       map(user => user.username)
     );
-    this.isLoading$ = this.todoService.isLoading$;
     this.totalTodos$ = this.todoService.totalTodos$;
   }
 
   onSignout() {
-    this.authService.signout().subscribe();
+    const sub = this.authService
+      .signout()
+      .subscribe(() => this.router.navigate(['/signin']));
+    this.subs.add(sub);
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 }
